@@ -17,11 +17,17 @@ export const signup = async (req, res) => {
     // HASH PASSWORD HERE
     const salt = await bcrypt.genSalt(10);
     const  hashPassword = await bcrypt.hash(password, salt);
-    // http://avatar.placeholder.iran.liara.run/
+   
 
-    const boyProfilePic = `https://avatar.iran.run.liara.run/public/boy?username=${username}`
+    // const boyProfilePic = `https://avatar.iran.run.liara.run/public/boy?username=${username}`
     
-    const girlProfilePic = `https://avatar.iran.run.liara.run/public/girl?username=${username}`
+    // const girlProfilePic = `https://avatar.iran.run.liara.run/public/girl?username=${username}`
+
+    const avatarBase = "https://avatar.iran.liara.run/public";   // fixed domain
+const safeUsername = encodeURIComponent(username);           // encode username
+const boyProfilePic  = `${avatarBase}/boy?username=${safeUsername}`;
+const girlProfilePic = `${avatarBase}/girl?username=${safeUsername}`;
+
     const newUser = new User({
         fullName, 
         username, 
