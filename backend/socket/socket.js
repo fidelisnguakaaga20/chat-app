@@ -39,17 +39,13 @@
 
 // export { app, io, server };
 
-
-// backend/socket/socket.js
 import { Server } from "socket.io";
 import http from "http";
 import express from "express";
 
 const app = express();
-
 const server = http.createServer(app);
 
-// CHANGE: read allowed origin from env and allow credentials (for cookies + Socket.IO across domains)
 const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN || "http://localhost:3000";
 
 const io = new Server(server, {
@@ -60,25 +56,20 @@ const io = new Server(server, {
   },
 });
 
-// KEEP THIS ABOVE THE EXPORTED HELPER
 const userSocketMap = {}; // { userId: socketId }
-
-export const getReceiverSocketId = (receiverId) => {
-  return userSocketMap[receiverId];
-};
+export const getReceiverSocketId = (receiverId) => userSocketMap[receiverId];
 
 io.on("connection", (socket) => {
   console.log("a user connected", socket.id);
 
   const userId = socket.handshake.query.userId;
-  if (userId !== "undefined") userSocketMap[userId] = socket.id;
+  if (userId && userId !== "undefined") userSocketMap[userId] = socket.id;
 
-  // Broadcast online users to everyone
   io.emit("getOnlineUsers", Object.keys(userSocketMap));
 
   socket.on("disconnect", () => {
     console.log("user disconnected", socket.id);
-    delete userSocketMap[userId];
+    if (userId) delete userSocketMap[userId];
     io.emit("getOnlineUsers", Object.keys(userSocketMap));
   });
 });

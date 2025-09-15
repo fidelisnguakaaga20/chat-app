@@ -3,10 +3,6 @@
     {
       "source": "/api/:path*",
       "destination": "https://YOUR-RENDER-BACKEND.onrender.com/api/:path*"
-    },
-    {
-      "source": "/socket.io/:path*",
-      "destination": "https://YOUR-RENDER-BACKEND.onrender.com/socket.io/:path*"
     }
   ]
 }
